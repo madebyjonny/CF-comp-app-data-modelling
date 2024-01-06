@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "registrations",
+  "info": {
+    "singularName": "registration",
+    "pluralName": "registrations",
+    "displayName": "Registration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "team": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
+    },
+    "competition": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::competition.competition"
+    },
+    "paymentId": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "workouts",
+  "info": {
+    "singularName": "workout",
+    "pluralName": "workouts",
+    "displayName": "Workout",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::category.category"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "For Time ",
+        "AMRAP ",
+        "Max Load "
+      ]
+    },
+    "timecap": {
+      "type": "string"
+    },
+    "competition": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::competition.competition",
+      "inversedBy": "workouts"
+    }
+  }
+}

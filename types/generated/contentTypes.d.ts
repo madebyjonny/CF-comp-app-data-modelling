@@ -678,7 +678,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -707,6 +706,13 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    team: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToOne',
+      'api::team.team'
+    >;
+    firstName: Attribute.String;
+    lastName: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -768,6 +774,281 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiCompetitionCompetition extends Schema.CollectionType {
+  collectionName: 'competitions';
+  info: {
+    singularName: 'competition';
+    pluralName: 'competitions';
+    displayName: 'Competition';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        minLength: 3;
+      }>;
+    date: Attribute.DateTime;
+    location: Attribute.Text;
+    teamSize: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        min: 1;
+      }> &
+      Attribute.DefaultTo<1>;
+    description: Attribute.Blocks;
+    workouts: Attribute.Relation<
+      'api::competition.competition',
+      'oneToMany',
+      'api::workout.workout'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::competition.competition',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::competition.competition',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiHeatHeat extends Schema.CollectionType {
+  collectionName: 'heats';
+  info: {
+    singularName: 'heat';
+    pluralName: 'heats';
+    displayName: 'Heat';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    startAt: Attribute.Time;
+    endAt: Attribute.Time;
+    competition: Attribute.Relation<
+      'api::heat.heat',
+      'oneToOne',
+      'api::competition.competition'
+    >;
+    workout: Attribute.Relation<
+      'api::heat.heat',
+      'oneToOne',
+      'api::workout.workout'
+    >;
+    teams: Attribute.Relation<'api::heat.heat', 'oneToMany', 'api::team.team'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::heat.heat', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::heat.heat', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRegistrationRegistration extends Schema.CollectionType {
+  collectionName: 'registrations';
+  info: {
+    singularName: 'registration';
+    pluralName: 'registrations';
+    displayName: 'Registration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    team: Attribute.Relation<
+      'api::registration.registration',
+      'oneToOne',
+      'api::team.team'
+    >;
+    competition: Attribute.Relation<
+      'api::registration.registration',
+      'oneToOne',
+      'api::competition.competition'
+    >;
+    paymentId: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::registration.registration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::registration.registration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiScoreScore extends Schema.CollectionType {
+  collectionName: 'scores';
+  info: {
+    singularName: 'score';
+    pluralName: 'scores';
+    displayName: 'Score';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    heat: Attribute.Relation<'api::score.score', 'oneToOne', 'api::heat.heat'>;
+    team: Attribute.Relation<'api::score.score', 'oneToOne', 'api::team.team'>;
+    workout: Attribute.Relation<
+      'api::score.score',
+      'oneToOne',
+      'api::workout.workout'
+    >;
+    scoreValue: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::score.score',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::score.score',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTeamTeam extends Schema.CollectionType {
+  collectionName: 'teams';
+  info: {
+    singularName: 'team';
+    pluralName: 'teams';
+    displayName: 'Team';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    captain: Attribute.Relation<
+      'api::team.team',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    members: Attribute.Relation<
+      'api::team.team',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    category: Attribute.Relation<
+      'api::team.team',
+      'oneToOne',
+      'api::category.category'
+    >;
+    heat: Attribute.Relation<'api::team.team', 'manyToOne', 'api::heat.heat'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::team.team', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::team.team', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiWorkoutWorkout extends Schema.CollectionType {
+  collectionName: 'workouts';
+  info: {
+    singularName: 'workout';
+    pluralName: 'workouts';
+    displayName: 'Workout';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    category: Attribute.Relation<
+      'api::workout.workout',
+      'oneToOne',
+      'api::category.category'
+    >;
+    description: Attribute.Blocks;
+    type: Attribute.Enumeration<['For Time ', 'AMRAP ', 'Max Load ']>;
+    timecap: Attribute.String;
+    competition: Attribute.Relation<
+      'api::workout.workout',
+      'manyToOne',
+      'api::competition.competition'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::workout.workout',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::workout.workout',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -786,6 +1067,13 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::category.category': ApiCategoryCategory;
+      'api::competition.competition': ApiCompetitionCompetition;
+      'api::heat.heat': ApiHeatHeat;
+      'api::registration.registration': ApiRegistrationRegistration;
+      'api::score.score': ApiScoreScore;
+      'api::team.team': ApiTeamTeam;
+      'api::workout.workout': ApiWorkoutWorkout;
     }
   }
 }
